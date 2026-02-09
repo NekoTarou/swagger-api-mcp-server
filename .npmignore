@@ -1,0 +1,12 @@
+src/
+tests/
+.github/
+.swagger-cache/
+.env
+.env.example
+vitest.config.ts
+tsconfig.json
+CLAUDE.md
+*.ts.map
+*.d.ts.map
+.DS_Store
