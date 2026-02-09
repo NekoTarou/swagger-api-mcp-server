@@ -55,7 +55,7 @@ const TRANSPORT = process.env.TRANSPORT ?? "stdio";
 const MCP_PORT = parseInt(process.env.MCP_PORT ?? "3000", 10);
 const MCP_HOST = process.env.MCP_HOST ?? "0.0.0.0";
 const API_BASE_URL = process.env.API_BASE_URL ?? "";
-const API_AUTH_TOKEN = process.env.API_AUTH_TOKEN ?? "";
+let apiAuthToken = process.env.API_AUTH_TOKEN ?? "";
 
 // Session management (HTTP mode)
 const SESSION_TIMEOUT_MS = parseInt(process.env.SESSION_TIMEOUT_MS ?? "1800000", 10);
@@ -1069,8 +1069,8 @@ function registerTools(server: McpServer): void {
         if (headers && Object.keys(headers).length > 0) {
           preview.push(`- **Custom Headers:** ${JSON.stringify(headers)}`);
         }
-        if (API_AUTH_TOKEN) {
-          preview.push(`- **Auth:** Bearer token (from env)`);
+        if (apiAuthToken) {
+          preview.push(`- **Auth:** Token configured`);
         }
         if (body !== undefined) {
           preview.push(`- **Body:**`);
@@ -1095,10 +1095,8 @@ function registerTools(server: McpServer): void {
           Accept: "application/json",
           ...headers,
         };
-        if (API_AUTH_TOKEN) {
-          requestHeaders["Authorization"] = API_AUTH_TOKEN.startsWith("Bearer ")
-            ? API_AUTH_TOKEN
-            : `Bearer ${API_AUTH_TOKEN}`;
+        if (apiAuthToken) {
+          requestHeaders["Authorization"] = apiAuthToken;
         }
 
         const response = await axios({
@@ -1172,6 +1170,84 @@ function registerTools(server: McpServer): void {
             content: [{ type: "text" as const, text: parts.join("\n") }],
           };
         }
+        return {
+          isError: true,
+          content: [{ type: "text" as const, text: handleError(error) }],
+        };
+      }
+    }
+  );
+
+  // ============================================================
+  // Tool: swagger_set_auth
+  // ============================================================
+
+  const SetAuthSchema = z
+    .object({
+      token: z
+        .string()
+        .optional()
+        .describe(
+          "The full Authorization header value (e.g. 'Bearer xxx', 'Basic xxx'). " +
+          "No prefix is added automatically."
+        ),
+      clear: z
+        .boolean()
+        .optional()
+        .default(false)
+        .describe("Set to true to clear the current auth token."),
+    })
+    .strict();
+
+  registerToolWithMetadata(
+    server,
+    "swagger_set_auth",
+    {
+      title: "Set Auth Token",
+      description:
+        "Dynamically set or clear the Authorization header used by swagger_call_api. " +
+        "The token value is used as-is for the Authorization header (no automatic Bearer prefix). " +
+        "Pass clear=true to remove the current token.",
+      inputSchema: SetAuthSchema,
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    async (params) => {
+      try {
+        const { token, clear } = params as z.infer<typeof SetAuthSchema>;
+
+        if (clear) {
+          apiAuthToken = "";
+          return {
+            content: [
+              { type: "text" as const, text: "Auth token cleared." },
+            ],
+          };
+        }
+
+        if (!token) {
+          return {
+            isError: true,
+            content: [
+              {
+                type: "text" as const,
+                text: "Please provide a `token` value or set `clear: true`.",
+              },
+            ],
+          };
+        }
+
+        apiAuthToken = token;
+        return {
+          content: [
+            { type: "text" as const, text: "Auth token updated successfully." },
+          ],
+        };
+      } catch (error) {
         return {
           isError: true,
           content: [{ type: "text" as const, text: handleError(error) }],
