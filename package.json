@@ -1,0 +1,47 @@
+{
+  "name": "swagger-api-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for accessing Swagger/OpenAPI exposed API interfaces",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "swagger-api-mcp-server": "dist/index.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node dist/index.js",
+    "start:http": "TRANSPORT='http' MCP_PORT='3000' node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prebuild": "vitest run",
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "express": "^5.0.1",
+    "js-yaml": "^4.1.0",
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.18"
+  },
+  "keywords": [
+    "mcp",
+    "swagger",
+    "openapi",
+    "api"
+  ],
+  "license": "MIT"
+}
