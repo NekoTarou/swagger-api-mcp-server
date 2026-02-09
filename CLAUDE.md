@@ -20,7 +20,7 @@ This is an MCP (Model Context Protocol) server that parses Swagger 2.0 / OpenAPI
 
 ### Source Layout
 
-- **`src/index.ts`** — Entry point, server factory, all 10 tool registrations, and both transport implementations (stdio + HTTP with Express). The `registerTools()` function contains all tool definitions. Each tool follows the pattern: define a Zod schema → call `registerToolWithMetadata()` with handler.
+- **`src/index.ts`** — Entry point, server factory, all 11 tool registrations, and both transport implementations (stdio + HTTP with Express). The `registerTools()` function contains all tool definitions. Each tool follows the pattern: define a Zod schema → call `registerToolWithMetadata()` with handler.
 - **`src/types.ts`** — TypeScript interfaces for tool metadata, OpenAPI schema objects, endpoint details, session info. The spec is typed as `Record<string, unknown>` throughout (not a typed OpenAPI object) — all field access uses bracket notation with explicit casts.
 - **`src/utils.ts`** — Pure utility functions: `$ref` resolution with circular reference protection (`deepResolve`), Swagger 2.0 vs OpenAPI 3.x abstraction helpers (`getSchemas`, `getServers`, `extractParameters`, etc.), and markdown formatting for tool output.
 - **`src/cache-types.ts`** — TypeScript interfaces for cache files: `CacheMeta`, `CacheInfo`, `CacheTag`, `CachePathEntry`, `CacheSchemaEntry`, `CacheEndpointDetail`.
@@ -62,7 +62,7 @@ Tools like `swagger_get_endpoint` and `swagger_get_schema` return ~200 chars (su
 
 ### Tool Naming Convention
 
-All tools use the prefix `swagger_` with snake_case: `swagger_load_spec`, `swagger_update_cache`, `swagger_get_info`, `swagger_list_tags`, `swagger_list_paths`, `swagger_get_endpoint`, `swagger_list_schemas`, `swagger_get_schema`, `swagger_search`, `swagger_call_api`.
+All tools use the prefix `swagger_` with snake_case: `swagger_load_spec`, `swagger_update_cache`, `swagger_get_info`, `swagger_list_tags`, `swagger_list_paths`, `swagger_get_endpoint`, `swagger_list_schemas`, `swagger_get_schema`, `swagger_search`, `swagger_call_api`, `swagger_set_auth`.
 
 ### Adding a New Tool
 

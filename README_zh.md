@@ -14,7 +14,7 @@
 
 - **Swagger 2.0 & OpenAPI 3.x** — 完整的双格式支持
 - **智能缓存** — 规范只解析一次，存储为本地 JSON 文件；工具仅返回简短摘要 + 文件路径（约 200 字符 vs 5-20KB）
-- **10 个 MCP 工具** — 加载、浏览、搜索和直接调用 API
+- **11 个 MCP 工具** — 加载、浏览、搜索、调用 API，并支持动态管理认证
 - **两种传输模式** — stdio（用于 CLI/IDE 集成）和 HTTP（用于多会话 Web 使用）
 - **两阶段 API 调用** — 执行前预览请求内容
 - **零外部解析器** — 自定义 `$ref` 解析器，支持循环引用保护
@@ -105,6 +105,7 @@ npm run start:http
 | `swagger_get_schema` | 获取 Schema 摘要 + 缓存文件路径（包含完整定义） |
 | `swagger_search` | 按关键词搜索端点和 Schema |
 | `swagger_call_api` | 执行 HTTP 请求，支持两阶段确认 |
+| `swagger_set_auth` | 运行时动态设置或清除 Authorization 请求头 |
 
 ## 缓存架构
 
@@ -134,7 +135,7 @@ npm run start:http
 | `MCP_PORT` | `3000` | HTTP 服务器端口 |
 | `MCP_HOST` | `0.0.0.0` | HTTP 服务器主机 |
 | `API_BASE_URL` | *(空)* | 覆盖 API 调用的基础 URL |
-| `API_AUTH_TOKEN` | *(空)* | API 调用的 Bearer Token |
+| `API_AUTH_TOKEN` | *(空)* | 初始 Authorization 请求头值（可通过 `swagger_set_auth` 在运行时更新） |
 | `CACHE_DIR` | `.swagger-cache` | 自定义缓存目录路径 |
 | `SESSION_TIMEOUT_MS` | `1800000` | HTTP 会话超时时间（30 分钟） |
 | `MAX_SESSIONS` | `100` | 最大并发 HTTP 会话数 |

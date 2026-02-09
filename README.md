@@ -14,7 +14,7 @@ An MCP (Model Context Protocol) server that parses **Swagger 2.0** and **OpenAPI
 
 - **Swagger 2.0 & OpenAPI 3.x** — Full dual-format support
 - **Smart Caching** — Spec parsed once, stored as local JSON files; tools return compact summaries + file paths (~200 chars vs 5-20KB)
-- **10 MCP Tools** — Load, browse, search, and call APIs directly
+- **11 MCP Tools** — Load, browse, search, call APIs, and manage auth dynamically
 - **Two Transport Modes** — stdio (for CLI/IDE integration) and HTTP (for multi-session web use)
 - **2-Phase API Calls** — Preview requests before executing them
 - **Zero External Parsers** — Custom `$ref` resolver with circular reference protection
@@ -105,6 +105,7 @@ Add to your MCP settings:
 | `swagger_get_schema` | Get schema summary + cached file path for full definition |
 | `swagger_search` | Search across endpoints and schemas by keyword |
 | `swagger_call_api` | Execute HTTP requests with 2-phase confirmation |
+| `swagger_set_auth` | Dynamically set or clear the Authorization header at runtime |
 
 ## Cache Architecture
 
@@ -134,7 +135,7 @@ Tools return brief summaries with file paths. The LLM reads full details on dema
 | `MCP_PORT` | `3000` | HTTP server port |
 | `MCP_HOST` | `0.0.0.0` | HTTP server host |
 | `API_BASE_URL` | *(empty)* | Override API base URL for calls |
-| `API_AUTH_TOKEN` | *(empty)* | Bearer token for API calls |
+| `API_AUTH_TOKEN` | *(empty)* | Initial Authorization header value (can be updated at runtime via `swagger_set_auth`) |
 | `CACHE_DIR` | `.swagger-cache` | Custom cache directory path |
 | `SESSION_TIMEOUT_MS` | `1800000` | HTTP session timeout (30 min) |
 | `MAX_SESSIONS` | `100` | Max concurrent HTTP sessions |
