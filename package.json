@@ -21,8 +21,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "prebuild": "vitest run",
-    "build": "tsc",
-    "clean": "rm -rf dist"
+    "build": "tsc && chmod +x dist/index.js",
+    "clean": "rm -rf dist",
+    "preversion": "vitest run",
+    "postversion": "git push origin main && git push origin --tags"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.1",

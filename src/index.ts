@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
 import "dotenv/config";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
@@ -12,6 +15,21 @@ import { zodToJsonSchema } from "zod-to-json-schema";
 
 import type { ToolMetadata, SessionInfo } from "./types.js";
 import type { CacheInfo, CachePathEntry, CacheSchemaEntry, CacheTag } from "./cache-types.js";
+
+// ============================================================
+// Package Version (read from package.json at runtime)
+// ============================================================
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PKG_VERSION: string = (() => {
+  try {
+    const pkgPath = path.resolve(__dirname, "..", "package.json");
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
+    return pkg.version ?? "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+})();
 import {
   getSpecVersion,
   getServers,
@@ -210,7 +228,7 @@ function toolMetadataToJson(meta: ToolMetadata): Record<string, unknown> {
 function createServer(): McpServer {
   const server = new McpServer({
     name: "swagger-api-mcp-server",
-    version: "1.0.0",
+    version: PKG_VERSION,
   });
 
   registerTools(server);
@@ -1303,7 +1321,7 @@ async function runHTTP(): Promise<void> {
     res.json({
       status: "ok",
       server: "swagger-api-mcp-server",
-      version: "1.0.0",
+      version: PKG_VERSION,
       activeSessions: sessions.size,
       specLoaded: loadedSpec !== null,
       cacheAvailable: cacheExists(),
