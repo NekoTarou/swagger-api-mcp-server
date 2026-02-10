@@ -5,6 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/swagger-api-mcp-server.svg)](https://www.npmjs.com/package/swagger-api-mcp-server)
 [![npm downloads](https://img.shields.io/npm/dm/swagger-api-mcp-server.svg)](https://www.npmjs.com/package/swagger-api-mcp-server)
 [![Node.js Version](https://img.shields.io/node/v/swagger-api-mcp-server.svg)](https://nodejs.org)
+[![MCP Badge](https://lobehub.com/badge/mcp/nekotarou-swagger-api-mcp-server?style=plastic)](https://lobehub.com/mcp/nekotarou-swagger-api-mcp-server)
 
 [English](./README.md) | [中文](./README_zh.md)
 
@@ -93,19 +94,19 @@ Add to your MCP settings:
 
 ## Tools
 
-| Tool | Description |
-|------|-------------|
-| `swagger_load_spec` | Load a Swagger/OpenAPI spec from URL, parse and cache it |
-| `swagger_update_cache` | Re-fetch spec and rebuild cache |
-| `swagger_get_info` | Get API metadata (title, version, servers, auth schemes) |
-| `swagger_list_tags` | List all tags with endpoint counts |
-| `swagger_list_paths` | List endpoints with filtering (tag, method, keyword) and pagination |
-| `swagger_get_endpoint` | Get endpoint summary + cached file path for full details |
-| `swagger_list_schemas` | List schema definitions with filtering and pagination |
-| `swagger_get_schema` | Get schema summary + cached file path for full definition |
-| `swagger_search` | Search across endpoints and schemas by keyword |
-| `swagger_call_api` | Execute HTTP requests with 2-phase confirmation |
-| `swagger_set_auth` | Dynamically set or clear the Authorization header at runtime |
+| Tool                   | Description                                                         |
+| ---------------------- | ------------------------------------------------------------------- |
+| `swagger_load_spec`    | Load a Swagger/OpenAPI spec from URL, parse and cache it            |
+| `swagger_update_cache` | Re-fetch spec and rebuild cache                                     |
+| `swagger_get_info`     | Get API metadata (title, version, servers, auth schemes)            |
+| `swagger_list_tags`    | List all tags with endpoint counts                                  |
+| `swagger_list_paths`   | List endpoints with filtering (tag, method, keyword) and pagination |
+| `swagger_get_endpoint` | Get endpoint summary + cached file path for full details            |
+| `swagger_list_schemas` | List schema definitions with filtering and pagination               |
+| `swagger_get_schema`   | Get schema summary + cached file path for full definition           |
+| `swagger_search`       | Search across endpoints and schemas by keyword                      |
+| `swagger_call_api`     | Execute HTTP requests with 2-phase confirmation                     |
+| `swagger_set_auth`     | Dynamically set or clear the Authorization header at runtime        |
 
 ## Cache Architecture
 
@@ -128,17 +129,17 @@ Tools return brief summaries with file paths. The LLM reads full details on dema
 
 ## Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SWAGGER_URL` | *(empty)* | Auto-load spec on startup |
-| `TRANSPORT` | `stdio` | Transport mode: `stdio` or `http` |
-| `MCP_PORT` | `3000` | HTTP server port |
-| `MCP_HOST` | `0.0.0.0` | HTTP server host |
-| `API_BASE_URL` | *(empty)* | Override API base URL for calls |
-| `API_AUTH_TOKEN` | *(empty)* | Initial Authorization header value (can be updated at runtime via `swagger_set_auth`) |
-| `CACHE_DIR` | `.swagger-cache` | Custom cache directory path |
-| `SESSION_TIMEOUT_MS` | `1800000` | HTTP session timeout (30 min) |
-| `MAX_SESSIONS` | `100` | Max concurrent HTTP sessions |
+| Variable             | Default          | Description                                                                           |
+| -------------------- | ---------------- | ------------------------------------------------------------------------------------- |
+| `SWAGGER_URL`        | _(empty)_        | Auto-load spec on startup                                                             |
+| `TRANSPORT`          | `stdio`          | Transport mode: `stdio` or `http`                                                     |
+| `MCP_PORT`           | `3000`           | HTTP server port                                                                      |
+| `MCP_HOST`           | `0.0.0.0`        | HTTP server host                                                                      |
+| `API_BASE_URL`       | _(empty)_        | Override API base URL for calls                                                       |
+| `API_AUTH_TOKEN`     | _(empty)_        | Initial Authorization header value (can be updated at runtime via `swagger_set_auth`) |
+| `CACHE_DIR`          | `.swagger-cache` | Custom cache directory path                                                           |
+| `SESSION_TIMEOUT_MS` | `1800000`        | HTTP session timeout (30 min)                                                         |
+| `MAX_SESSIONS`       | `100`            | Max concurrent HTTP sessions                                                          |
 
 ## Development
 

@@ -5,6 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/swagger-api-mcp-server.svg)](https://www.npmjs.com/package/swagger-api-mcp-server)
 [![npm downloads](https://img.shields.io/npm/dm/swagger-api-mcp-server.svg)](https://www.npmjs.com/package/swagger-api-mcp-server)
 [![Node.js Version](https://img.shields.io/node/v/swagger-api-mcp-server.svg)](https://nodejs.org)
+[![MCP Badge](https://lobehub.com/badge/mcp/nekotarou-swagger-api-mcp-server?style=plastic)](https://lobehub.com/mcp/nekotarou-swagger-api-mcp-server)
 
 [English](./README.md) | [中文](./README_zh.md)
 
@@ -93,19 +94,19 @@ npm run start:http
 
 ## 工具列表
 
-| 工具 | 说明 |
-|------|------|
-| `swagger_load_spec` | 从 URL 加载 Swagger/OpenAPI 规范，解析并缓存 |
-| `swagger_update_cache` | 重新获取规范并重建缓存 |
-| `swagger_get_info` | 获取 API 元信息（标题、版本、服务器、认证方案） |
-| `swagger_list_tags` | 列出所有标签及对应端点数量 |
-| `swagger_list_paths` | 列出端点，支持过滤（标签、方法、关键词）和分页 |
-| `swagger_get_endpoint` | 获取端点摘要 + 缓存文件路径（包含完整详情） |
-| `swagger_list_schemas` | 列出 Schema 定义，支持过滤和分页 |
-| `swagger_get_schema` | 获取 Schema 摘要 + 缓存文件路径（包含完整定义） |
-| `swagger_search` | 按关键词搜索端点和 Schema |
-| `swagger_call_api` | 执行 HTTP 请求，支持两阶段确认 |
-| `swagger_set_auth` | 运行时动态设置或清除 Authorization 请求头 |
+| 工具                   | 说明                                            |
+| ---------------------- | ----------------------------------------------- |
+| `swagger_load_spec`    | 从 URL 加载 Swagger/OpenAPI 规范，解析并缓存    |
+| `swagger_update_cache` | 重新获取规范并重建缓存                          |
+| `swagger_get_info`     | 获取 API 元信息（标题、版本、服务器、认证方案） |
+| `swagger_list_tags`    | 列出所有标签及对应端点数量                      |
+| `swagger_list_paths`   | 列出端点，支持过滤（标签、方法、关键词）和分页  |
+| `swagger_get_endpoint` | 获取端点摘要 + 缓存文件路径（包含完整详情）     |
+| `swagger_list_schemas` | 列出 Schema 定义，支持过滤和分页                |
+| `swagger_get_schema`   | 获取 Schema 摘要 + 缓存文件路径（包含完整定义） |
+| `swagger_search`       | 按关键词搜索端点和 Schema                       |
+| `swagger_call_api`     | 执行 HTTP 请求，支持两阶段确认                  |
+| `swagger_set_auth`     | 运行时动态设置或清除 Authorization 请求头       |
 
 ## 缓存架构
 
@@ -128,17 +129,17 @@ npm run start:http
 
 ## 环境变量
 
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `SWAGGER_URL` | *(空)* | 启动时自动加载的规范 URL |
-| `TRANSPORT` | `stdio` | 传输模式：`stdio` 或 `http` |
-| `MCP_PORT` | `3000` | HTTP 服务器端口 |
-| `MCP_HOST` | `0.0.0.0` | HTTP 服务器主机 |
-| `API_BASE_URL` | *(空)* | 覆盖 API 调用的基础 URL |
-| `API_AUTH_TOKEN` | *(空)* | 初始 Authorization 请求头值（可通过 `swagger_set_auth` 在运行时更新） |
-| `CACHE_DIR` | `.swagger-cache` | 自定义缓存目录路径 |
-| `SESSION_TIMEOUT_MS` | `1800000` | HTTP 会话超时时间（30 分钟） |
-| `MAX_SESSIONS` | `100` | 最大并发 HTTP 会话数 |
+| 变量                 | 默认值           | 说明                                                                  |
+| -------------------- | ---------------- | --------------------------------------------------------------------- |
+| `SWAGGER_URL`        | _(空)_           | 启动时自动加载的规范 URL                                              |
+| `TRANSPORT`          | `stdio`          | 传输模式：`stdio` 或 `http`                                           |
+| `MCP_PORT`           | `3000`           | HTTP 服务器端口                                                       |
+| `MCP_HOST`           | `0.0.0.0`        | HTTP 服务器主机                                                       |
+| `API_BASE_URL`       | _(空)_           | 覆盖 API 调用的基础 URL                                               |
+| `API_AUTH_TOKEN`     | _(空)_           | 初始 Authorization 请求头值（可通过 `swagger_set_auth` 在运行时更新） |
+| `CACHE_DIR`          | `.swagger-cache` | 自定义缓存目录路径                                                    |
+| `SESSION_TIMEOUT_MS` | `1800000`        | HTTP 会话超时时间（30 分钟）                                          |
+| `MAX_SESSIONS`       | `100`            | 最大并发 HTTP 会话数                                                  |
 
 ## 开发
 
