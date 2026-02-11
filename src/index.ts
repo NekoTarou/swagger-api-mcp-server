@@ -232,6 +232,8 @@ function createServer(): McpServer {
   });
 
   registerTools(server);
+  registerPrompts(server);
+  registerResources(server);
   return server;
 }
 
@@ -1253,6 +1255,191 @@ function registerTools(server: McpServer): void {
           content: [{ type: "text" as const, text: handleError(error) }],
         };
       }
+    }
+  );
+}
+
+// ============================================================
+// Prompt Definitions
+// ============================================================
+
+function registerPrompts(server: McpServer): void {
+  server.prompt(
+    "swagger_explore_api",
+    "Load and explore an API spec: view info, tags, endpoints, and schemas step by step",
+    { url: z.string().describe("URL of the Swagger/OpenAPI spec to explore") },
+    async ({ url }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: [
+              `I want to explore the API at: ${url}`,
+              ``,
+              `Please follow these steps:`,
+              `1. Use swagger_load_spec to load the spec from the URL above.`,
+              `2. Use swagger_get_info to show the API overview (title, version, servers, auth).`,
+              `3. Use swagger_list_tags to show all tags and their endpoint counts.`,
+              `4. Use swagger_list_paths to list all endpoints (paginate if needed).`,
+              `5. Use swagger_list_schemas to list all data models.`,
+              `6. Provide a brief summary of the API's purpose, main resource groups, and authentication requirements.`,
+            ].join("\n"),
+          },
+        },
+      ],
+    })
+  );
+
+  server.prompt(
+    "swagger_find_endpoint",
+    "Search for an endpoint by keyword, then show its full details",
+    { keyword: z.string().describe("Keyword to search for in endpoints") },
+    async ({ keyword }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: [
+              `I'm looking for API endpoints related to: "${keyword}"`,
+              ``,
+              `Please follow these steps:`,
+              `1. Use swagger_search with the keyword to find matching endpoints and schemas.`,
+              `2. For each matching endpoint, use swagger_get_endpoint to get its summary and cache file path.`,
+              `3. Read the cache file to show full details (parameters, request body, responses).`,
+              `4. If related schemas are found, use swagger_get_schema to show their structure.`,
+              `5. Summarize how to use the most relevant endpoint(s), including required parameters and expected responses.`,
+            ].join("\n"),
+          },
+        },
+      ],
+    })
+  );
+
+  server.prompt(
+    "swagger_integrate_api",
+    "Find the right endpoint for a task and prepare an API call",
+    {
+      url: z.string().describe("URL of the Swagger/OpenAPI spec"),
+      task: z.string().describe("Description of what you want to accomplish"),
+    },
+    async ({ url, task }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: [
+              `I want to accomplish the following task using the API at ${url}:`,
+              ``,
+              `**Task:** ${task}`,
+              ``,
+              `Please follow these steps:`,
+              `1. Use swagger_load_spec to load the spec (if not already loaded).`,
+              `2. Use swagger_search to find endpoints relevant to the task.`,
+              `3. Use swagger_get_endpoint to view the most relevant endpoint's details.`,
+              `4. Read the endpoint's cache file for full parameter and response details.`,
+              `5. If the endpoint references schemas, use swagger_get_schema to understand the data models.`,
+              `6. Use swagger_call_api to preview the request (confirmed=false), then confirm (confirmed=true) when ready.`,
+              `7. Show the response and explain the result.`,
+            ].join("\n"),
+          },
+        },
+      ],
+    })
+  );
+}
+
+// ============================================================
+// Resource Definitions
+// ============================================================
+
+function registerResources(server: McpServer): void {
+  server.resource(
+    "api-info",
+    "swagger://api/info",
+    { description: "API basic information including title, version, servers, and security schemes" },
+    async () => {
+      if (!cacheExists()) {
+        return {
+          contents: [
+            {
+              uri: "swagger://api/info",
+              mimeType: "text/plain",
+              text: "No API spec loaded. Use swagger_load_spec to load a spec first.",
+            },
+          ],
+        };
+      }
+      const info = readCacheJSON<CacheInfo>("info.json");
+      return {
+        contents: [
+          {
+            uri: "swagger://api/info",
+            mimeType: "application/json",
+            text: JSON.stringify(info, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.resource(
+    "api-endpoints",
+    "swagger://api/endpoints",
+    { description: "Index of all API endpoints with method, path, summary, and tags" },
+    async () => {
+      if (!cacheExists()) {
+        return {
+          contents: [
+            {
+              uri: "swagger://api/endpoints",
+              mimeType: "text/plain",
+              text: "No API spec loaded. Use swagger_load_spec to load a spec first.",
+            },
+          ],
+        };
+      }
+      const paths = readCacheJSON<CachePathEntry[]>("paths-index.json");
+      return {
+        contents: [
+          {
+            uri: "swagger://api/endpoints",
+            mimeType: "application/json",
+            text: JSON.stringify(paths, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.resource(
+    "api-schemas",
+    "swagger://api/schemas",
+    { description: "Index of all schema/model definitions with name, type, and property count" },
+    async () => {
+      if (!cacheExists()) {
+        return {
+          contents: [
+            {
+              uri: "swagger://api/schemas",
+              mimeType: "text/plain",
+              text: "No API spec loaded. Use swagger_load_spec to load a spec first.",
+            },
+          ],
+        };
+      }
+      const schemas = readCacheJSON<CacheSchemaEntry[]>("schemas-index.json");
+      return {
+        contents: [
+          {
+            uri: "swagger://api/schemas",
+            mimeType: "application/json",
+            text: JSON.stringify(schemas, null, 2),
+          },
+        ],
+      };
     }
   );
 }

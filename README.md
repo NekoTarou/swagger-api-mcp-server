@@ -16,6 +16,8 @@ An MCP (Model Context Protocol) server that parses **Swagger 2.0** and **OpenAPI
 - **Swagger 2.0 & OpenAPI 3.x** — Full dual-format support
 - **Smart Caching** — Spec parsed once, stored as local JSON files; tools return compact summaries + file paths (~200 chars vs 5-20KB)
 - **11 MCP Tools** — Load, browse, search, call APIs, and manage auth dynamically
+- **3 MCP Prompts** — Guided workflows for exploring, searching, and integrating APIs
+- **3 MCP Resources** — Direct access to cached API info, endpoints, and schemas
 - **Two Transport Modes** — stdio (for CLI/IDE integration) and HTTP (for multi-session web use)
 - **2-Phase API Calls** — Preview requests before executing them
 - **Zero External Parsers** — Custom `$ref` resolver with circular reference protection
@@ -107,6 +109,22 @@ Add to your MCP settings:
 | `swagger_search`       | Search across endpoints and schemas by keyword                      |
 | `swagger_call_api`     | Execute HTTP requests with 2-phase confirmation                     |
 | `swagger_set_auth`     | Dynamically set or clear the Authorization header at runtime        |
+
+## Prompts
+
+| Prompt                   | Arguments        | Description                                                    |
+| ------------------------ | ---------------- | -------------------------------------------------------------- |
+| `swagger_explore_api`    | `url`            | Guided workflow to load and fully explore an API spec           |
+| `swagger_find_endpoint`  | `keyword`        | Search for endpoints by keyword and view full details           |
+| `swagger_integrate_api`  | `url`, `task`    | Find the right endpoint for a task and execute an API call      |
+
+## Resources
+
+| Resource         | URI                       | Description                                          |
+| ---------------- | ------------------------- | ---------------------------------------------------- |
+| `api-info`       | `swagger://api/info`      | API basic information (title, version, servers, auth) |
+| `api-endpoints`  | `swagger://api/endpoints` | Index of all API endpoints                           |
+| `api-schemas`    | `swagger://api/schemas`   | Index of all schema/model definitions                |
 
 ## Cache Architecture
 

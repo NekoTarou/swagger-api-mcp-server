@@ -16,6 +16,8 @@
 - **Swagger 2.0 & OpenAPI 3.x** — 完整的双格式支持
 - **智能缓存** — 规范只解析一次，存储为本地 JSON 文件；工具仅返回简短摘要 + 文件路径（约 200 字符 vs 5-20KB）
 - **11 个 MCP 工具** — 加载、浏览、搜索、调用 API，并支持动态管理认证
+- **3 个 MCP 提示词** — 引导式工作流，用于探索、搜索和集成 API
+- **3 个 MCP 资源** — 直接访问缓存的 API 信息、端点和 Schema
 - **两种传输模式** — stdio（用于 CLI/IDE 集成）和 HTTP（用于多会话 Web 使用）
 - **两阶段 API 调用** — 执行前预览请求内容
 - **零外部解析器** — 自定义 `$ref` 解析器，支持循环引用保护
@@ -107,6 +109,22 @@ npm run start:http
 | `swagger_search`       | 按关键词搜索端点和 Schema                       |
 | `swagger_call_api`     | 执行 HTTP 请求，支持两阶段确认                  |
 | `swagger_set_auth`     | 运行时动态设置或清除 Authorization 请求头       |
+
+## 提示词（Prompts）
+
+| 提示词                   | 参数             | 说明                                         |
+| ------------------------ | ---------------- | -------------------------------------------- |
+| `swagger_explore_api`    | `url`            | 引导式工作流：加载并全面浏览一个 API 规范    |
+| `swagger_find_endpoint`  | `keyword`        | 按关键词搜索端点并查看完整详情               |
+| `swagger_integrate_api`  | `url`, `task`    | 根据任务描述找到合适端点并执行 API 调用      |
+
+## 资源（Resources）
+
+| 资源             | URI                       | 说明                                      |
+| ---------------- | ------------------------- | ----------------------------------------- |
+| `api-info`       | `swagger://api/info`      | API 基本信息（标题、版本、服务器、认证）  |
+| `api-endpoints`  | `swagger://api/endpoints` | 所有 API 端点索引                         |
+| `api-schemas`    | `swagger://api/schemas`   | 所有 Schema/模型定义索引                  |
 
 ## 缓存架构
 

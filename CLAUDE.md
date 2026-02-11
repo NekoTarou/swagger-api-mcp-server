@@ -20,7 +20,7 @@ This is an MCP (Model Context Protocol) server that parses Swagger 2.0 / OpenAPI
 
 ### Source Layout
 
-- **`src/index.ts`** — Entry point, server factory, all 11 tool registrations, and both transport implementations (stdio + HTTP with Express). The `registerTools()` function contains all tool definitions. Each tool follows the pattern: define a Zod schema → call `registerToolWithMetadata()` with handler.
+- **`src/index.ts`** — Entry point, server factory, all 11 tool registrations, 3 prompt registrations, 3 resource registrations, and both transport implementations (stdio + HTTP with Express). The `registerTools()` function contains all tool definitions. Each tool follows the pattern: define a Zod schema → call `registerToolWithMetadata()` with handler. `registerPrompts()` registers guided workflow prompts. `registerResources()` registers static resources backed by cache files.
 - **`src/types.ts`** — TypeScript interfaces for tool metadata, OpenAPI schema objects, endpoint details, session info. The spec is typed as `Record<string, unknown>` throughout (not a typed OpenAPI object) — all field access uses bracket notation with explicit casts.
 - **`src/utils.ts`** — Pure utility functions: `$ref` resolution with circular reference protection (`deepResolve`), Swagger 2.0 vs OpenAPI 3.x abstraction helpers (`getSchemas`, `getServers`, `extractParameters`, etc.), and markdown formatting for tool output.
 - **`src/cache-types.ts`** — TypeScript interfaces for cache files: `CacheMeta`, `CacheInfo`, `CacheTag`, `CachePathEntry`, `CacheSchemaEntry`, `CacheEndpointDetail`.
@@ -59,6 +59,22 @@ Tools like `swagger_get_endpoint` and `swagger_get_schema` return ~200 chars (su
 
 - **stdio** (`TRANSPORT=stdio`, default): Single `McpServer` + `StdioServerTransport`. Logs go to stderr.
 - **HTTP** (`TRANSPORT=http`): Express server with session management via `mcp-session-id` header. Endpoints: `POST/GET/DELETE /mcp`, `GET /health`, `GET /tools`. Sessions have configurable timeout and max count with periodic cleanup.
+
+### Prompts
+
+Three prompts are registered in `registerPrompts()` to provide guided workflows:
+- `swagger_explore_api(url)` — Step-by-step API exploration
+- `swagger_find_endpoint(keyword)` — Search and view endpoint details
+- `swagger_integrate_api(url, task)` — Task-driven endpoint discovery and API calling
+
+### Resources
+
+Three static resources are registered in `registerResources()`, backed by cache JSON files:
+- `swagger://api/info` — API info from `info.json`
+- `swagger://api/endpoints` — Endpoint index from `paths-index.json`
+- `swagger://api/schemas` — Schema index from `schemas-index.json`
+
+Each resource checks `cacheExists()` and returns a helpful message if no spec is loaded.
 
 ### Tool Naming Convention
 
